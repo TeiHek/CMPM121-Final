@@ -141,6 +141,7 @@ public class PlayerController : MonoBehaviour
     private void TryInteract()
     {
         RaycastHit hit;
+        Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.forward * interactRange, color:Color.blue);
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactRange, interactableLayers))
         {
             if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Interactable")

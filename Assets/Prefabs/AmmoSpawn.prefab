@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 8315236299842328574}
   - component: {fileID: 1358515141519854096}
   - component: {fileID: 9076639785215700216}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: AmmoSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}

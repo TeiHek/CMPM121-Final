@@ -44,11 +44,13 @@ public class GameManager : MonoBehaviour
     {
         ammo += ammoOnPickup;
         ammo = Mathf.Clamp(ammo, 0, maxAmmoCount);
+        UIManager.Instance.UpdateAmmoCount();
     }
 
     public void ConsumeAmmo()
     {
         ammo--;
+        UIManager.Instance.UpdateAmmoCount();
     }
 
     public int GetAmmo()

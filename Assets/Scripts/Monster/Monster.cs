@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
+    [SerializeField] private Transform fade;
     [SerializeField] private float maxHealth;
     private float currentHealth;
     private bool dead;
@@ -40,13 +41,14 @@ public class Monster : MonoBehaviour
             // stop movement and bring up lose screen
             movement.stop();
             movement.enabled = false;
-            //TODO: call function in some game manager singleton to end game LOSE after a few seconds
+            //other.GetComponent<PlayerController>().enabled = false;
+            SceneChangeManager.instance.changeScene("LoseScene");
         }
     }
 
     private void endGame() {
         // bring up win screen and destroy game object
-        //TODO: call function in some game manager singleton to end game WIN after a few seconds
+        SceneChangeManager.instance.changeScene("WinScene");
         Destroy(gameObject);
     }
 

@@ -41,7 +41,7 @@ public class Monster : MonoBehaviour
             // stop movement and bring up lose screen
             movement.stop();
             movement.enabled = false;
-            //other.GetComponent<PlayerController>().enabled = false;
+            other.GetComponent<PlayerController>().enabled = false;
             SceneChangeManager.instance.changeScene("LoseScene");
         }
     }

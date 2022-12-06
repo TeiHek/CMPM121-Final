@@ -92,7 +92,7 @@ public class MonsterMovement : MonoBehaviour
     *  stop() and restartMovement() may be unneeded
     *  stop maybe for when player is caughts
     */
-    private void stop() {
+    public void stop() {
         navAgent.isStopped = true;
         navAgent.speed = 0;
     }

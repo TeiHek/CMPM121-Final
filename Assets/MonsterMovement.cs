@@ -57,7 +57,7 @@ public class MonsterMovement : MonoBehaviour
     }
 
     private void getNextPoint() {
-        //print("getting next point " + nextPoint);
+        if(points.Count == 0) return;
         navAgent.destination = points[nextPoint];
         nextPoint = (nextPoint + 1) % points.Count;
     }
@@ -88,15 +88,13 @@ public class MonsterMovement : MonoBehaviour
         patrolling = true;
     }
 
-    /*
-    *  stop() and restartMovement() may be unneeded
-    *  stop maybe for when player is caughts
-    */
     public void stop() {
         navAgent.isStopped = true;
         navAgent.speed = 0;
     }
 
+
+    // may be unecessary
     private void restartMovement() {
         navAgent.isStopped = false;
         navAgent.speed = patrolSpeed;

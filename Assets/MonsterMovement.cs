@@ -6,7 +6,6 @@ using UnityEngine.AI;
 public class MonsterMovement : MonoBehaviour
 {
     [Header("General")]
-    [SerializeField] private float speed;
     [SerializeField] private float viewDistance;
     private Camera viewCam;
 
@@ -14,8 +13,10 @@ public class MonsterMovement : MonoBehaviour
     [SerializeField] private Transform player;
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private float restartPatrolTime;
+    [SerializeField] private float chaseSpeed;
 
     [Header("Patrol")] 
+    [SerializeField] private float patrolSpeed;
     [SerializeField] private List<Vector3> points;
     private int nextPoint;
     private bool patrolling;
@@ -23,7 +24,7 @@ public class MonsterMovement : MonoBehaviour
 
     private void Awake() {
         navAgent = GetComponent<NavMeshAgent>();
-        navAgent.speed = speed;
+        navAgent.speed = patrolSpeed;
         viewCam = GetComponent<Camera>();
 
         nextPoint = 0;
@@ -39,19 +40,18 @@ public class MonsterMovement : MonoBehaviour
             // start chasing player
             StopCoroutine("restartPatrol");
             navAgent.destination = player.position;
+            navAgent.speed = chaseSpeed;
         }
         else {
             // basic patrolling
             if(patrolling) {
-                if(!navAgent.pathPending && navAgent.remainingDistance < 0.5f) {
+                if(!navAgent.pathPending && navAgent.remainingDistance < 0.5f)
                     getNextPoint();
-                }
             }
             else {
                 // get to last known player position. when position reached, wait, then restart patrol
-                if(!navAgent.pathPending && navAgent.remainingDistance < 0.5f) {
+                if(!navAgent.pathPending && navAgent.remainingDistance < 0.5f)
                     StartCoroutine("restartPatrol");
-                }
             } 
         }
     }
@@ -73,7 +73,7 @@ public class MonsterMovement : MonoBehaviour
         if(xCorrect && yCorrect && zCorrect) {
             Vector3 direction = (player.position - transform.position).normalized;
             bool hit = Physics.Raycast(transform.position, direction, viewDistance, playerLayer);
-            Debug.DrawLine (transform.position, transform.position + direction * 10, Color.red, Mathf.Infinity);
+            Debug.DrawLine (transform.position, transform.position + direction * viewDistance, Color.red, 2);
             return hit;
         }
 
@@ -84,11 +84,13 @@ public class MonsterMovement : MonoBehaviour
         // wait then restart patrol where monster left off
         yield return new WaitForSeconds(restartPatrolTime);
         navAgent.destination = nextPoint - 1 >= 0 ? points[(nextPoint - 1) % points.Count] : points[points.Count - 1];
+        navAgent.speed = patrolSpeed;
         patrolling = true;
     }
 
     /*
     *  stop() and restartMovement() may be unneeded
+    *  stop maybe for when player is caughts
     */
     private void stop() {
         navAgent.isStopped = true;
@@ -97,6 +99,6 @@ public class MonsterMovement : MonoBehaviour
 
     private void restartMovement() {
         navAgent.isStopped = false;
-        navAgent.speed = speed;
+        navAgent.speed = patrolSpeed;
     }
 }

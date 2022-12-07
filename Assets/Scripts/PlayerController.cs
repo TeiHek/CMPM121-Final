@@ -6,7 +6,7 @@ using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private Rigidbody rigidbody;
+    [SerializeField] private Rigidbody _rigidbody;
     [SerializeField] private Transform camPivot;
     [SerializeField] private CinemachineVirtualCamera vcam;
 
@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector2 moveDirection;
     [SerializeField] private float currentMaxMoveSpeed;
     [SerializeField] private bool sprintHeld;
-    [SerializeField] private bool isSprinting;
     [SerializeField] private bool isGrounded;
     [SerializeField] private float cameraPivotRotation;
 
@@ -36,6 +35,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         currentMaxMoveSpeed = maxMoveSpeed;
+        StartCoroutine(FootstepLoop());
     }
 
     // Update is called once per frame
@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
     private void ApplyMove()
     {
         Vector3 movement = (transform.right * moveDirection.x) + (transform.forward * moveDirection.y);
-        rigidbody.AddForce(movement * moveAcceleration * (currentMaxMoveSpeed/maxMoveSpeed) * (Time.deltaTime * 60), ForceMode.Acceleration);
+        _rigidbody.AddForce(movement * moveAcceleration * (currentMaxMoveSpeed/maxMoveSpeed) * (Time.deltaTime * 60), ForceMode.Acceleration);
     }
 
     private void UpdateCurrentMaxMoveSpeed()
@@ -104,12 +104,10 @@ public class PlayerController : MonoBehaviour
         if (sprintHeld)
         {
             currentMaxMoveSpeed = maxMoveSpeed + sprintModifier;
-            isSprinting = true;
         }
         else
         {
             currentMaxMoveSpeed = maxMoveSpeed;
-            isSprinting = false;
         }
     }
 
@@ -135,7 +133,7 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-        rigidbody.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
+        _rigidbody.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
     }
 
     private void TryInteract()
@@ -166,22 +164,36 @@ public class PlayerController : MonoBehaviour
 
     private void LimitMovement()
     {
-        rigidbody.velocity = Vector3.ClampMagnitude(new Vector3(rigidbody.velocity.x, 0, rigidbody.velocity.z), currentMaxMoveSpeed) + new Vector3(0, rigidbody.velocity.y, 0); 
+        _rigidbody.velocity = Vector3.ClampMagnitude(new Vector3(_rigidbody.velocity.x, 0, _rigidbody.velocity.z), currentMaxMoveSpeed) + new Vector3(0, _rigidbody.velocity.y, 0); 
     }
 
     public void PerformFireRaycast()
     {
         RaycastHit hit;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactRange, interactableLayers))
+        AudioManager.Instance.PlayShot();
+        GameManager.Instance.SetJustShot(true);
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 200f, fireLayers))
         {
             // Hit Monster
-
-            //if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Interactable")
-            //{
-            //    print("hit");
-            //    hit.transform.GetComponentInChildren<Interactable>().InteractAction();
-            //}
+            
+            if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Monster")
+            {
+                print("hit");
+                hit.transform.GetComponentInChildren<Monster>().damage();
+            }
         }
     }
-    
+
+    private IEnumerator FootstepLoop()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(sprintHeld ? 0.5f : 1.0f);
+
+            if (moveDirection != Vector2.zero)
+            {
+                AudioManager.Instance.PlayFootstep();
+            }
+        }
+    }
 }

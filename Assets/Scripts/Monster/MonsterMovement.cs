@@ -33,10 +33,10 @@ public class MonsterMovement : MonoBehaviour
 
     private void Update() {
         // TODO: Make this also work if player fires their weapon
-        if(inView()) {
+        if(inView() || GameManager.Instance.GetJustShot()) {
             if(patrolling)
                 patrolling = false;
-
+            GameManager.Instance.SetJustShot(false);
             // start chasing player
             StopCoroutine("restartPatrol");
             navAgent.destination = player.position;
@@ -80,6 +80,10 @@ public class MonsterMovement : MonoBehaviour
         return false;
     }
 
+    public bool heardShot(bool state)
+    {
+        return state;
+    }
     private IEnumerator restartPatrol() {
         // wait then restart patrol where monster left off
         yield return new WaitForSeconds(restartPatrolTime);

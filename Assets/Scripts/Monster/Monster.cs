@@ -5,7 +5,8 @@ using UnityEngine;
 public class Monster : MonoBehaviour
 {
     [SerializeField] private Transform fade;
-    [SerializeField] private float maxHealth;
+    [SerializeField] private int maxHealth;
+    [SerializeField] private int damageOnHit;
     private float currentHealth;
     private bool dead;
     private Collider playerDetector;
@@ -20,9 +21,9 @@ public class Monster : MonoBehaviour
         movement = GetComponent<MonsterMovement>();
     }
 
-    public void damage(float dmgAmount) {
+    public void damage() {
         // remove health from monster and kill if health is fully depleted
-        currentHealth -= dmgAmount;
+        currentHealth -= damageOnHit;
         if(currentHealth <= 0)
             die();
     }
@@ -53,7 +54,6 @@ public class Monster : MonoBehaviour
     }
 
     private void Update() {
-        if(Input.GetKeyDown(KeyCode.O))
-            damage(5);
+        
     }
 }

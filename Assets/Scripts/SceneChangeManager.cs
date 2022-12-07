@@ -29,6 +29,7 @@ public class SceneChangeManager : MonoBehaviour
         fade.gameObject.SetActive(true);
         fadeAnim.Play("FadeOut");
         yield return new WaitUntil(() => fade.GetComponent<FadeTransition>().transitionOver());
+        Cursor.lockState = CursorLockMode.None;
         SceneManager.LoadScene(sceneName);
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,9 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int ammo;
     [SerializeField] private int maxAmmoCount;
     [SerializeField] private int ammoOnPickup;
-
-    [Header("Game State")]
-    [SerializeField] private bool alive;
+    [SerializeField] private bool justShot;
 
     private void Awake()
     {
@@ -30,6 +29,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        justShot = false;
     }
 
     // Update is called once per frame
@@ -63,4 +63,14 @@ public class GameManager : MonoBehaviour
         return maxAmmoCount;
     }
     #endregion
+
+    public bool GetJustShot()
+    {
+        return justShot;
+    }
+
+    public void SetJustShot(bool state)
+    {
+        justShot = state;
+    }
 }

@@ -338,7 +338,7 @@ Rigidbody:
   m_GameObject: {fileID: 451292412172304429}
   serializedVersion: 2
   m_Mass: 2
-  m_Drag: 2
+  m_Drag: 4
   m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -369,7 +369,7 @@ MonoBehaviour:
   cameraPivotRotation: 0
   maxMoveSpeed: 50
   sprintModifier: 20
-  moveAcceleration: 10
+  moveAcceleration: 20
   jumpForce: 5
   cameraSensitivity: 0.25
   interactRange: 2

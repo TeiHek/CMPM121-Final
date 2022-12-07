@@ -10197,7 +10197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fade: {fileID: 0}
-  maxHealth: 25
+  maxHealth: 15
   damageOnHit: 1
   hurtSound: {fileID: 8300000, guid: 21e3515afb332364ca92957be0f1bdac, type: 3}
 --- !u!114 &9028008712720594548

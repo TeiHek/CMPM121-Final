@@ -10196,7 +10196,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fade: {fileID: 0}
-  maxHealth: 15
+  maxHealth: 25
+  damageOnHit: 1
 --- !u!114 &9028008712720594548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10210,6 +10211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewDistance: 30
+  ppfxVolume: {fileID: 0}
   player: {fileID: 0}
   playerLayer:
     serializedVersion: 2

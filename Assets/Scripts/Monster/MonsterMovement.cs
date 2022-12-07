@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class MonsterMovement : MonoBehaviour
 {
     [Header("General")]
     [SerializeField] private float viewDistance;
+    [SerializeField] private Volume ppfxVolume;
+    private Vignette playerVignette;
     private Camera viewCam;
 
     [Header("Chase")]
@@ -23,6 +27,7 @@ public class MonsterMovement : MonoBehaviour
     private NavMeshAgent navAgent;
 
     private void Awake() {
+        ppfxVolume.profile.TryGet<Vignette>(out playerVignette);
         navAgent = GetComponent<NavMeshAgent>();
         navAgent.speed = patrolSpeed;
         viewCam = GetComponent<Camera>();
@@ -37,10 +42,12 @@ public class MonsterMovement : MonoBehaviour
             if(patrolling)
                 patrolling = false;
             GameManager.Instance.SetJustShot(false);
+
             // start chasing player
             StopCoroutine("restartPatrol");
             navAgent.destination = player.position;
             navAgent.speed = chaseSpeed;
+            setVignetteIntensity();
         }
         else {
             // basic patrolling
@@ -80,10 +87,10 @@ public class MonsterMovement : MonoBehaviour
         return false;
     }
 
-    public bool heardShot(bool state)
-    {
+    public bool heardShot(bool state) {
         return state;
     }
+
     private IEnumerator restartPatrol() {
         // wait then restart patrol where monster left off
         yield return new WaitForSeconds(restartPatrolTime);
@@ -97,10 +104,15 @@ public class MonsterMovement : MonoBehaviour
         navAgent.speed = 0;
     }
 
-
     // may be unecessary
     private void restartMovement() {
         navAgent.isStopped = false;
         navAgent.speed = patrolSpeed;
+    }
+
+    private void setVignetteIntensity() {
+        float distance = Vector3.Distance(transform.position, player.position);
+        float intensity = (-(1 / viewDistance) * distance) + 1;
+        playerVignette.intensity.value = Mathf.Clamp(intensity, 0, 1);
     }
 }

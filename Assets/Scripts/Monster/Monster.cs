@@ -52,8 +52,4 @@ public class Monster : MonoBehaviour
         SceneChangeManager.instance.changeScene("WinScene");
         Destroy(gameObject);
     }
-
-    private void Update() {
-        
-    }
 }

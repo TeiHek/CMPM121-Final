@@ -16,7 +16,7 @@ public class Monster : MonoBehaviour
     private void Awake() {
         currentHealth = maxHealth;
         dead = false;
-        playerDetector = GetComponent<Collider>();
+        playerDetector = GetComponent<CapsuleCollider>();
         anim = GetComponent<Animator>();
         movement = GetComponent<MonsterMovement>();
     }

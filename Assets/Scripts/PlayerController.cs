@@ -139,13 +139,14 @@ public class PlayerController : MonoBehaviour
     private void TryInteract()
     {
         RaycastHit hit;
-        Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.forward * interactRange, color:Color.blue);
+        Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + Camera.main.transform.forward * interactRange, color:Color.blue, 1f);
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactRange, interactableLayers))
         {
+            print(hit.transform.gameObject.name);
             if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Interactable")
             {
-                print("hit");
-                hit.transform.GetComponentInChildren<Interactable>().InteractAction();
+                //print("hit");
+                hit.transform.GetComponentInParent<Interactable>().InteractAction();
             }
         }
     }
@@ -172,13 +173,13 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
         AudioManager.Instance.PlayShot();
         GameManager.Instance.SetJustShot(true);
+        Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + Camera.main.transform.forward * 200, color: Color.green, 1f);
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 200f, fireLayers))
         {
             // Hit Monster
-            
             if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Monster")
             {
-                print("hit");
+                print("hit monster");
                 hit.transform.GetComponentInChildren<Monster>().damage();
             }
         }

@@ -10,6 +10,7 @@ public class ItemManager : MonoBehaviour
     [SerializeField] private int maxActiveItems;
     [SerializeField] private List<GameObject> possibleItemSpawns;
     [SerializeField] private List<GameObject> activeItems;
+    private bool activeShuffle;
 
     private void Awake()
     {
@@ -26,13 +27,14 @@ public class ItemManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        activeShuffle = false;
         SpawnItems();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(activeItems.Count < minActiveItems && GameManager.Instance.GetAmmo() <= GameManager.Instance.GetMaxAmmoCount())
+        if(activeItems.Count < minActiveItems && GameManager.Instance.GetAmmo() < GameManager.Instance.GetMaxAmmoCount() && !activeShuffle)
         {
             SpawnItems();
         }
@@ -44,6 +46,7 @@ public class ItemManager : MonoBehaviour
 
     private void ShuffleSpawns()
     {
+        activeShuffle = true;
         int n = possibleItemSpawns.Count - 1;
         // Knuth Shuffle
         while (n > 0)
@@ -55,11 +58,13 @@ public class ItemManager : MonoBehaviour
             possibleItemSpawns[target] = temp;
             n--;
         }
+        activeShuffle = false;
     }
 
     private void SpawnItems()
     {
         int i = 0;
+        ShuffleSpawns();
         while (i < possibleItemSpawns.Count && activeItems.Count < maxActiveItems)
         {
             if(possibleItemSpawns[i].GetComponentInChildren<Interactable>().IsSpawnPrevented())
@@ -86,7 +91,6 @@ public class ItemManager : MonoBehaviour
     {
         activeItems.Remove(item);
         possibleItemSpawns.Add(item);
-        ShuffleSpawns();
     }
 
     private void RemoveAllAactive()

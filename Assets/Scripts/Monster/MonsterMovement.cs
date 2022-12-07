@@ -10,8 +10,10 @@ public class MonsterMovement : MonoBehaviour
     [Header("General")]
     [SerializeField] private float viewDistance;
     [SerializeField] private Volume ppfxVolume;
+    [SerializeField, Range(0,1)] private float vignetteDecay;
     private Vignette playerVignette;
     private Camera viewCam;
+    private bool playerInView;
 
     [Header("Chase")]
     [SerializeField] private Transform player;
@@ -34,6 +36,7 @@ public class MonsterMovement : MonoBehaviour
 
         nextPoint = 0;
         patrolling = true;
+        playerInView = false;
     }
 
     private void Update() {
@@ -47,12 +50,16 @@ public class MonsterMovement : MonoBehaviour
             StopCoroutine("restartPatrol");
             navAgent.destination = player.position;
             navAgent.speed = chaseSpeed;
-            setVignetteIntensity();
+            if (playerInView)
+            {
+                setVignetteIntensity();
+            }
         }
         else {
             // basic patrolling
             if(patrolling) {
-                if(!navAgent.pathPending && navAgent.remainingDistance < 0.5f)
+                playerVignette.intensity.value = Mathf.Clamp(playerVignette.intensity.value - vignetteDecay * Time.deltaTime, 0f, 1f);
+                if (!navAgent.pathPending && navAgent.remainingDistance < 0.5f)
                     getNextPoint();
             }
             else {
@@ -81,9 +88,10 @@ public class MonsterMovement : MonoBehaviour
             Vector3 direction = (player.position - transform.position).normalized;
             bool hit = Physics.Raycast(transform.position, direction, viewDistance, playerLayer);
             Debug.DrawLine (transform.position, transform.position + direction * viewDistance, Color.red, 2);
+            playerInView = hit;
             return hit;
         }
-
+        playerInView = false;
         return false;
     }
 

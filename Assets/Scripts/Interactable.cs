@@ -16,7 +16,7 @@ public class Interactable : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _collider = GetComponent<Collider>();
+        _collider = GetComponentInChildren<SphereCollider>();
         item.SetActive(false);
         _collider.enabled = false;
     }

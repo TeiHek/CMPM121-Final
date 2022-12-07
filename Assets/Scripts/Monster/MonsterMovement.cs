@@ -11,9 +11,12 @@ public class MonsterMovement : MonoBehaviour
     [SerializeField] private float viewDistance;
     [SerializeField] private Volume ppfxVolume;
     [SerializeField, Range(0,1)] private float vignetteDecay;
+    [SerializeField] AudioClip alertSound;
+    private AudioSource audioSource;
     private Vignette playerVignette;
     private Camera viewCam;
     private bool playerInView;
+    private bool alerted;
 
     [Header("Chase")]
     [SerializeField] private Transform player;
@@ -33,10 +36,12 @@ public class MonsterMovement : MonoBehaviour
         navAgent = GetComponent<NavMeshAgent>();
         navAgent.speed = patrolSpeed;
         viewCam = GetComponent<Camera>();
+        audioSource = GetComponent<AudioSource>();
 
         nextPoint = 0;
         patrolling = true;
         playerInView = false;
+        alerted = false;
     }
 
     private void Update() {
@@ -46,6 +51,11 @@ public class MonsterMovement : MonoBehaviour
                 patrolling = false;
             GameManager.Instance.SetJustShot(false);
 
+            if (!alerted)
+            {
+                alerted = true;
+                audioSource.PlayOneShot(alertSound);
+            }
             // start chasing player
             StopCoroutine("restartPatrol");
             navAgent.destination = player.position;
@@ -102,6 +112,7 @@ public class MonsterMovement : MonoBehaviour
     private IEnumerator restartPatrol() {
         // wait then restart patrol where monster left off
         yield return new WaitForSeconds(restartPatrolTime);
+        alerted = false;
         navAgent.destination = nextPoint - 1 >= 0 ? points[(nextPoint - 1) % points.Count] : points[points.Count - 1];
         navAgent.speed = patrolSpeed;
         patrolling = true;

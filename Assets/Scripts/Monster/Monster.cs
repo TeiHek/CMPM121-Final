@@ -7,6 +7,8 @@ public class Monster : MonoBehaviour
     [SerializeField] private Transform fade;
     [SerializeField] private int maxHealth;
     [SerializeField] private int damageOnHit;
+    [SerializeField] AudioClip hurtSound;
+    private AudioSource audioSource;
     private float currentHealth;
     private bool dead;
     private Collider playerDetector;
@@ -19,11 +21,13 @@ public class Monster : MonoBehaviour
         playerDetector = GetComponent<CapsuleCollider>();
         anim = GetComponent<Animator>();
         movement = GetComponent<MonsterMovement>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void damage() {
         // remove health from monster and kill if health is fully depleted
         currentHealth -= damageOnHit;
+        audioSource.PlayOneShot(hurtSound);
         if(currentHealth <= 0)
             die();
     }

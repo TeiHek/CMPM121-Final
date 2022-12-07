@@ -3,7 +3,7 @@ A project by Randy Le and Mason Kubiak <br>
 Completed in the span of 3 days.
 
 A horror game where the player is trapped in a cabin and has to defend themselves from a smoke monster. <br>
-Check out our project here: (Insert link)
+Check out our project here: https://koobysnack.itch.io/smoke-in-the-shadows
 
 ### Sound Credits:
 Ghoul Sound: ibm5155, https://freesound.org/people/ibm5155/sounds/174915/
